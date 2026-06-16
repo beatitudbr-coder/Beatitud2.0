@@ -972,8 +972,8 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
     msg += `\n_Beatitud · Produção Criativa_`;
 
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
-  };
+    const numeroWhatsAppBeatitud = '5511940778135';
+    window.open(`https://wa.me/${numeroWhatsAppBeatitud}?text=${encoded}`, '_blank');
 
   return (
     <div className="orcamento-container">
