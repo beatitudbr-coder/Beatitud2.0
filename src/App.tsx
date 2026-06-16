@@ -1493,8 +1493,8 @@ function LoginView() {
   );
 }
 
-export default function App() {
-    const rotaPublicaOrcamento = window.location.hash === '#/orcamento';
+export default function App() {                                                                                                             
+   const rotaPublicaOrcamento = window.location.hash === '#/orcamento';
 
   if (rotaPublicaOrcamento) {
     return <GeradorOrcamento leadContext={null} publico />;
