@@ -973,6 +973,7 @@ function GeradorOrcamento({ leadContext, publico = false }: { leadContext: Lead 
     const encoded = encodeURIComponent(msg);
     const numeroWhatsAppBeatitud = '5511940778135';
     window.open(`https://wa.me/${numeroWhatsAppBeatitud}?text=${encoded}`, '_blank');
+  };
 
   return (
     <div className="orcamento-container">
