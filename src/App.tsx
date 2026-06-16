@@ -772,7 +772,7 @@ const INITIAL_PACOTES: OrcamentoPacote[] = [
   { id: 'cinema', name: 'Cinema', badge: 'Pacote 03', discountPercent: 20, items: ['2 Reels de Cômodos', 'Fotos Editoriais', 'Pacote de Stories', 'Diária inclusa', 'Carrossel', 'Tour de Autoridade', 'Vídeo Cinematográfico'], services: ['reels', 'fotos', 'stories', 'carrossel', 'tour', 'cinema'], diaria: 1 },
 ];
 
-function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
+function GeradorOrcamento({ leadContext, publico = false }: { leadContext: Lead | null; publico?: boolean }) {
   const [baseDiaria, setBaseDiaria] = useState(200);
   const [services, setServices] = useState<OrcamentoService[]>(INITIAL_SERVICES);
   const [pacotes, setPacotes] = useState<OrcamentoPacote[]>(INITIAL_PACOTES);
@@ -972,7 +972,9 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
     msg += `\n_Beatitud · Produção Criativa_`;
 
     const encoded = encodeURIComponent(msg);
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    const encoded = encodeURIComponent(msg);
+const numeroWhatsAppBeatitud = '5511940778135';
+window.open(`https://wa.me/${numeroWhatsAppBeatitud}?text=${encoded}`, '_blank');
   };
 
   return (
@@ -1138,9 +1140,14 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
       <header>
         <div className="orc-logo">Beatitud<span>Produção Criativa</span></div>
         <div className="orc-header-actions">
-          <div className="orc-header-tag">Gerador de Orçamento</div>
-          <button className="orc-btn-icon" onClick={openSettings}>⚙️ Preços</button>
-        </div>
+  <div className="orc-header-tag">
+    {publico ? 'Configurador de Produção' : 'Gerador de Orçamento'}
+  </div>
+
+  {!publico && (
+    <button className="orc-btn-icon" onClick={openSettings}>⚙️ Preços</button>
+  )}
+</div>
       </header>
 
       {/* MODAL CONFIGURAÇÕES */}
@@ -1309,11 +1316,13 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
               <div className="orc-total-label">Subtotal</div>
               <div className="orc-total-value">R$ {baseTotalCalculated.toLocaleString('pt-BR')}</div>
             </div>
-            <div className="orc-discount-row">
-              <span className="orc-discount-label">Desconto Adicional (R$)</span>
-              <input className="orc-discount-input" type="number" placeholder="0" min="0" value={manualDiscount} onChange={e => setManualDiscount(e.target.value ? Number(e.target.value) : '')} />
-              <span className="orc-discount-value">{discountVal > 0 ? `− R$ ${discountVal.toLocaleString('pt-BR')}` : ''}</span>
-            </div>
+            {!publico && (
+  <div className="orc-discount-row">
+    <span className="orc-discount-label">Desconto Adicional (R$)</span>
+    <input className="orc-discount-input" type="number" placeholder="0" min="0" value={manualDiscount} onChange={e => setManualDiscount(e.target.value ? Number(e.target.value) : '')} />
+    <span className="orc-discount-value">{discountVal > 0 ? `− R$ ${discountVal.toLocaleString('pt-BR')}` : ''}</span>
+  </div>
+)}
             <div className="orc-final-total">
               <div className="orc-final-label">Total</div>
               <div className="orc-final-value">R$ {finalTotal.toLocaleString('pt-BR')}</div>
@@ -1321,7 +1330,9 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
           </div>
 
           <div className="orc-actions">
-            <button className="orc-btn-primary" disabled={lineItems.length === 0} onClick={sendWhatsApp}>Enviar via WhatsApp</button>
+          <button className="orc-btn-primary" disabled={lineItems.length === 0} onClick={sendWhatsApp}>
+  {publico ? 'Solicitar proposta pelo WhatsApp' : 'Enviar via WhatsApp'}
+</button>
             <button className="orc-btn-secondary" onClick={() => window.print()}>Imprimir / Salvar PDF</button>
             <button className="orc-btn-secondary" onClick={resetAll}>Limpar tudo</button>
           </div>
@@ -1490,6 +1501,11 @@ function LoginView() {
 }
 
 export default function App() {
+  const rotaPublicaOrcamento = window.location.hash === '#/orcamento';
+
+  if (rotaPublicaOrcamento) {
+    return <GeradorOrcamento leadContext={null} publico />;
+  }
   const [leads, setLeads] = useState<Lead[]>([]);
   const [scripts, setScripts] = useState<Script[]>([]);
   const [loading, setLoading] = useState(true);
