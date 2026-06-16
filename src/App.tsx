@@ -772,8 +772,7 @@ const INITIAL_PACOTES: OrcamentoPacote[] = [
   { id: 'cinema', name: 'Cinema', badge: 'Pacote 03', discountPercent: 20, items: ['2 Reels de Cômodos', 'Fotos Editoriais', 'Pacote de Stories', 'Diária inclusa', 'Carrossel', 'Tour de Autoridade', 'Vídeo Cinematográfico'], services: ['reels', 'fotos', 'stories', 'carrossel', 'tour', 'cinema'], diaria: 1 },
 ];
 
-function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
-  const [baseDiaria, setBaseDiaria] = useState(200);
+function GeradorOrcamento({ leadContext, publico = false }: { leadContext: Lead | null; publico?: boolean }) {  const [baseDiaria, setBaseDiaria] = useState(200);
   const [services, setServices] = useState<OrcamentoService[]>(INITIAL_SERVICES);
   const [pacotes, setPacotes] = useState<OrcamentoPacote[]>(INITIAL_PACOTES);
   
@@ -1138,9 +1137,14 @@ function GeradorOrcamento({ leadContext }: { leadContext: Lead | null }) {
       <header>
         <div className="orc-logo">Beatitud<span>Produção Criativa</span></div>
         <div className="orc-header-actions">
-          <div className="orc-header-tag">Gerador de Orçamento</div>
-          <button className="orc-btn-icon" onClick={openSettings}>⚙️ Preços</button>
+          <div className="orc-header-tag">
+            {publico ? 'Configurador de Produção' : 'Gerador de Orçamento'}
         </div>
+
+        {!publico && (
+          <button className="orc-btn-icon" onClick={openSettings}>⚙️ Preços</button>
+        )}
+      </div>
       </header>
 
       {/* MODAL CONFIGURAÇÕES */}
@@ -1490,6 +1494,11 @@ function LoginView() {
 }
 
 export default function App() {
+    const rotaPublicaOrcamento = window.location.hash === '#/orcamento';
+
+  if (rotaPublicaOrcamento) {
+    return <GeradorOrcamento leadContext={null} publico />;
+  }
   const [leads, setLeads] = useState<Lead[]>([]);
   const [scripts, setScripts] = useState<Script[]>([]);
   const [loading, setLoading] = useState(true);
